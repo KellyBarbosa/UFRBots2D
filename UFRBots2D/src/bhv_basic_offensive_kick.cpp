@@ -102,10 +102,14 @@ int Bhv_BasicOffensiveKick::recebeestado(PlayerAgent *agent)
     {
         if (wm.self().pos().y <= -20.0)
             estado = 1;
-        if (wm.self().pos().y >= 20.0)
-            estado = 3;
-        if ((wm.self().pos().y > -20.0) && (wm.self().pos().y < 20.0))
+        if ((wm.self().pos().y > -20) && (wm.self().pos().y <= -9.0))
             estado = 2;
+        if ((wm.self().pos().y > -9.0) && (wm.self().pos().y <= 9))
+            estado = 3;
+        if ((wm.self().pos().y) > 9 && (wm.self().pos().y < 20))
+            estado = 4;
+        if (wm.self().pos().y >= 20.0)
+            estado = 5;
     }
     else
     {
@@ -114,11 +118,15 @@ int Bhv_BasicOffensiveKick::recebeestado(PlayerAgent *agent)
         if ((wm.self().pos().x > 13.0) && (wm.self().pos().x <= 26.0))
         {
             if (wm.self().pos().y <= -20.0)
-                estado = 4;
-            if (wm.self().pos().y >= 20.0)
                 estado = 6;
-            if ((wm.self().pos().y > -20.0) && (wm.self().pos().y < 20.0))
-                estado = 5;
+            if ((wm.self().pos().y > -20) && (wm.self().pos().y <= -9.0))
+                estado = 7;
+            if ((wm.self().pos().y > -9.0) && (wm.self().pos().y <= 9))
+                estado = 8;
+            if ((wm.self().pos().y) > 9 && (wm.self().pos().y < 20))
+                estado = 9;
+            if (wm.self().pos().y >= 20.0)
+                estado = 10;
         }
         else
         {
@@ -127,11 +135,15 @@ int Bhv_BasicOffensiveKick::recebeestado(PlayerAgent *agent)
             if ((wm.self().pos().x > 26.0) && (wm.self().pos().x <= 39.0))
             {
                 if (wm.self().pos().y <= -20.0)
-                    estado = 7;
+                    estado = 11;
+                if ((wm.self().pos().y > -20) && (wm.self().pos().y <= -9.0))
+                    estado = 12;
+                if ((wm.self().pos().y > -9.0) && (wm.self().pos().y <= 9))
+                    estado = 13;
+                if ((wm.self().pos().y) > 9 && (wm.self().pos().y < 20))
+                    estado = 14;
                 if (wm.self().pos().y >= 20.0)
-                    estado = 9;
-                if ((wm.self().pos().y > -20.0) && (wm.self().pos().y < 20.0))
-                    estado = 8;
+                    estado = 15;
             }
             else
             {
@@ -139,19 +151,23 @@ int Bhv_BasicOffensiveKick::recebeestado(PlayerAgent *agent)
                 // Zona D - Nova
                 if (wm.self().pos().x > 39.0)
                 {
-                    if (wm.self().pos().y <= -12.0)
-                        estado = 10;
-                    if (wm.self().pos().y >= 12.0)
-                        estado = 12;
-                    if ((wm.self().pos().y > -12.0) && (wm.self().pos().y < 12.0))
-                        estado = 11;
+                    if (wm.self().pos().y <= -20.0)
+                        estado = 16;
+                    if ((wm.self().pos().y > -20) && (wm.self().pos().y <= -9.0))
+                        estado = 17;
+                    if ((wm.self().pos().y > -9.0) && (wm.self().pos().y <= 9))
+                        estado = 18;
+                    if ((wm.self().pos().y) > 9 && (wm.self().pos().y < 20))
+                        estado = 19;
+                    if (wm.self().pos().y >= 20.0)
+                        estado = 20;
                 }
             }
         }
     }
 
     if (nearest_opp_dist > 4)
-        estado = estado + 12; // Longe
+        estado = estado + 20; // Longe
 
     // Caso nao entre no laco, eh perto
 
@@ -346,7 +362,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         }
     }
 
-    int actions[24][4] = {
+    int actions[40][4] = {
         {1, 1, 1, 1}, // 1
         {1, 1, 1, 1}, // 2
         {1, 1, 1, 1}, // 3
@@ -371,6 +387,22 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         {1, 4, 2, 4}, // 22
         {6, 6, 6, 6}, // 23
         {1, 4, 2, 4}, // 24
+        {1, 1, 1, 1}, // 25
+        {1, 1, 1, 1}, // 26
+        {1, 1, 1, 1}, // 27
+        {1, 2, 1, 2}, // 28
+        {1, 2, 1, 2}, // 29
+        {1, 2, 1, 2}, // 30
+        {1, 3, 2, 4}, // 31
+        {3, 4, 3, 4}, // 32
+        {1, 3, 2, 4}, // 33
+        {2, 4, 3, 4}, // 34
+        {6, 6, 6, 6}, // 35
+        {2, 4, 3, 4}, // 36
+        {1, 1, 1, 1}, // 37
+        {1, 1, 1, 1}, // 38
+        {1, 1, 1, 1}, // 39
+        {1, 1, 1, 2}, // 40
     };
 
     switch (estado)
@@ -445,6 +477,54 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         acao_q = actions[estado - 1][strategy - 1];
         break;
     case 24:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 25:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 26:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 27:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 28:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 29:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 30:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 31:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 32:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 33:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 34:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 35:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 36:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 37:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 38:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 39:
+        acao_q = actions[estado - 1][strategy - 1];
+        break;
+    case 40:
         acao_q = actions[estado - 1][strategy - 1];
         break;
     }
