@@ -211,9 +211,9 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         }
     }
 
-    printf("\n----------------------\nStrategy: ");
+    /* printf("\n----------------------\nStrategy: ");
     cout << strategy << endl; // Exibe a estratégia atual
-    printf("\n----------------------\n");
+    printf("\n----------------------\n"); */
 
     Vector2D ball = wm.ball().pos();
     Vector2D me = wm.self().pos();
