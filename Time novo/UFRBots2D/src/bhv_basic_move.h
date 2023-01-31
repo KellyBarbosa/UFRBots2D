@@ -38,6 +38,8 @@ public:
     void openQFile(int gols);
     void writeFlagFile(int flagValue, int controlFile);
     int readFlagFile(int controlFile);
+    int selectStrategy();
+    float *readQFile();
     // FIM: UFRBots 2022/2023 - Kelly
 
     Bhv_BasicMove()

@@ -73,6 +73,10 @@ using namespace std;
 
 using namespace rcsc;
 
+// INÍCIO: UFRBots 2022/2023 - Kelly
+#include "bhv_basic_move.h"
+// FIM: UFRBots 2022/2023 - Kelly
+
 bool Bhv_BasicOffensiveKick::execute(PlayerAgent *agent)
 {
 
@@ -180,6 +184,12 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     const WorldModel &wm = agent->world();
 
     // INÍCIO: UFRBots 2022/2023 - Kelly
+
+    // int sortStrategy;
+    int strategy = Bhv_BasicMove().selectStrategy();
+
+    // int e_alea = Bhv_BasicMove().readFlagFile(0); // A função a ser chamada não é esta, a função ainda será criada
+
     int our_score = (wm.ourSide() == LEFT
                          ? wm.gameMode().scoreLeft()
                          : wm.gameMode().scoreRight());
@@ -189,8 +199,8 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     /* const double e_alea = (float)rand() / RAND_MAX;
     cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl; */
     int score = our_score - opp_score;
-    int strategy = 1;
-    if (wm.time().cycle() <= 3000)
+    // int strategy = 1;
+    /* if (wm.time().cycle() <= 3000)
     {
         if (score >= 0)
         {
@@ -211,7 +221,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         {
             strategy = 4;
         }
-    }
+    } */
 
     printf("\n----------------------\nStrategy: ");
     cout << strategy << endl; // Exibe a estratégia atual

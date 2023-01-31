@@ -63,6 +63,10 @@ using namespace rcsc;
 using namespace std;
 using std::stringstream;
 
+#define ALPHA 0.75
+#define GAMA 0.15
+#define e 0.01
+
 void Bhv_BasicMove::writeFlagFile(int flagValue, int controlFile)
 {
 	FILE *fileController;
@@ -119,7 +123,7 @@ int Bhv_BasicMove::readFlagFile(int controlFile)
 	return 1;
 }
 
-void Bhv_BasicMove::openQFile(int gols)
+void Bhv_BasicMove::openQFile(int strategy)
 {
 	FILE *file;
 	file = fopen("arquivos/q.txt", "r");
@@ -147,7 +151,7 @@ void Bhv_BasicMove::openQFile(int gols)
 		{
 			printf("\n ****************** Pode escrever ******************\n");
 			printf("\n----------------------\nOUR: ");
-			cout << gols << endl; // Exibe os gols do nosso time
+			cout << strategy << endl; // Exibe a estratégia utilizada durante a partida
 			printf("\n----------------------\n");
 			FILE *file;
 			file = fopen("arquivos/q.txt", "w");
@@ -165,7 +169,7 @@ void Bhv_BasicMove::openQFile(int gols)
 				}
 			}
 
-			writeFlagFile(1); // Indica que o arquivo já foi escrito
+			writeFlagFile(1, 0); // Indica que o arquivo já foi escrito
 
 			fclose(file);
 		}
@@ -178,6 +182,77 @@ void Bhv_BasicMove::openQFile(int gols)
 	{
 		printf("Arquivo não encontrado.");
 	}
+}
+
+float *Bhv_BasicMove::readQFile()
+{
+	FILE *file;
+	file = fopen("arquivos/q.txt", "r");
+
+	if (file)
+	{
+		float q[5];
+
+		for (int i = 0; i < 5; i++)
+		{
+			fscanf(file, "%f", &q[i]);
+		}
+
+		fclose(file);
+
+		printf("\n----------------------\n");
+
+		for (int i = 0; i < 5; i++)
+		{
+			printf("%f ", q[i]);
+		}
+		printf("\n----------------------\n");
+
+		return q;
+	}
+	else
+	{
+		printf("Arquivo não encontrado.");
+	}
+}
+
+int Bhv_BasicMove::selectStrategy()
+{
+	const double e_alea = (float)rand() / RAND_MAX;
+	cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
+	int selectedStrategy;
+	if (e_alea <= e)
+	{ // ação/estratégia aleatória
+		selectedStrategy = rand() % 4 + 1;
+	}
+	else
+	{ // melhor ação/estratégia
+		float *q;
+		q = readQFile();
+		int n = sizeof(q) / sizeof(q[0]); // tamanho do array
+		cout << "\n----------------------\nn: " << n << "\n----------------------" << endl;
+
+		// float maxQ = *max_element(q, q + n); // maior valor do array
+		// cout << "\n----------------------\nmaxQ: " << maxQ << "\n----------------------" << endl;
+
+		float max = q[0];
+		int position = 0;
+		for (int i = 0; i < n; i++)
+		{
+			if (q[i] > max)
+			{
+				max = q[i];
+				position = i;
+			}
+		}
+
+		cout << "\n----------------------\nmax: " << max << "\n----------------------" << endl;
+		cout << "\n----------------------\nposition: " << position << "\n----------------------" << endl;
+		selectedStrategy = position;
+		// writeFlagFile(0, 1);
+	}
+
+	return selectedStrategy;
 }
 
 // FIM: UFRBots 2022/2023 - Kelly
@@ -198,11 +273,11 @@ bool Bhv_BasicMove::execute(PlayerAgent *agent)
 											 ? wm.gameMode().scoreLeft()
 											 : wm.gameMode().scoreRight());
 
-	const double e_alea = (float)rand() / RAND_MAX;
-	cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
-
+	int selectedStrategy;
 	if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
 	{
+		selectedStrategy = selectStrategy();
+
 		writeFlagFile(0, 0);
 	}
 
