@@ -66,24 +66,18 @@ using std::stringstream;
 #define ALPHA 0.75
 #define GAMA 0.15
 #define e 0.01
+#define Q_SIZE 4
 
-void Bhv_BasicMove::writeFlagFile(int flagValue, int controlFile)
+void Bhv_BasicMove::writeFlagFile(int flagValue)
 {
 	FILE *fileController;
-	if (controlFile == 0)
-	{
-		fileController = fopen("arquivos/q_controller.txt", "w");
-	}
-	if (controlFile == 1)
-	{
-		fileController = fopen("arquivos/e_alea_controller.txt", "w");
-	}
+	fileController = fopen("arquivos/q_controller.txt", "w");
 
 	if (fileController)
 	{
-		int flag = flagValue;
+		// int flag = flagValue;
 
-		fprintf(fileController, "%d", flag);
+		fprintf(fileController, "%d", flagValue);
 
 		fclose(fileController);
 	}
@@ -93,17 +87,11 @@ void Bhv_BasicMove::writeFlagFile(int flagValue, int controlFile)
 	}
 }
 
-int Bhv_BasicMove::readFlagFile(int controlFile)
+int Bhv_BasicMove::readFlagFile()
 {
 	FILE *fileController;
-	if (controlFile == 0)
-	{
-		fileController = fopen("arquivos/q_controller.txt", "w");
-	}
-	if (controlFile == 1)
-	{
-		fileController = fopen("arquivos/e_alea_controller.txt", "w");
-	}
+
+	fileController = fopen("arquivos/q_controller.txt", "w");
 
 	if (fileController)
 	{
@@ -123,16 +111,59 @@ int Bhv_BasicMove::readFlagFile(int controlFile)
 	return 1;
 }
 
-void Bhv_BasicMove::openQFile(int strategy)
+void Bhv_BasicMove::writeQFile(int strategy, int gols)
+{
+	float *q = readQFile();
+	int n = sizeof(q) / sizeof(q[0]); // tamanho do array
+	cout << "\n----------------------\nn - writeQFile: " << n << "\n----------------------" << endl;
+	float max = q[0];
+	int position = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (q[i] > max)
+		{
+			max = q[i];
+			position = i;
+		}
+	}
+
+	float newQ = q[strategy] + ALPHA * (gols + GAMA * max - q[strategy]);
+	q[strategy] = newQ;
+
+	if (readFlagFile() == 0)
+	{
+		printf("\n ****************** Pode escrever ******************\n");
+		FILE *file;
+		file = fopen("arquivos/q.txt", "w");
+
+		for (int i = 0; i < Q_SIZE; i++)
+		{
+
+			fprintf(file, "%.2f ", q[i]);
+		}
+
+		writeFlagFile(1); // Indica que o arquivo já foi escrito
+
+		fclose(file);
+	}
+	else
+	{
+		printf("\n ****************** Não pode escrever ******************\n");
+	}
+}
+
+/* void Bhv_BasicMove::writeQFile(int strategy, int gols)
 {
 	FILE *file;
 	file = fopen("arquivos/q.txt", "r");
 
+	float r;
+
 	if (file)
 	{
-		float q[5];
+		float q[Q_SIZE];
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < Q_SIZE; i++)
 		{
 			fscanf(file, "%f", &q[i]);
 		}
@@ -141,13 +172,13 @@ void Bhv_BasicMove::openQFile(int strategy)
 
 		printf("\n----------------------\n");
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < Q_SIZE; i++)
 		{
 			printf("%f ", q[i]);
 		}
 		printf("\n----------------------\n");
 
-		if (readFlagFile(0) == 0)
+		if (readFlagFile() == 0)
 		{
 			printf("\n ****************** Pode escrever ******************\n");
 			printf("\n----------------------\nOUR: ");
@@ -156,7 +187,7 @@ void Bhv_BasicMove::openQFile(int strategy)
 			FILE *file;
 			file = fopen("arquivos/q.txt", "w");
 
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < Q_SIZE; i++)
 			{
 
 				if (i % 2 == 0)
@@ -169,7 +200,7 @@ void Bhv_BasicMove::openQFile(int strategy)
 				}
 			}
 
-			writeFlagFile(1, 0); // Indica que o arquivo já foi escrito
+			writeFlagFile(1); // Indica que o arquivo já foi escrito
 
 			fclose(file);
 		}
@@ -182,7 +213,7 @@ void Bhv_BasicMove::openQFile(int strategy)
 	{
 		printf("Arquivo não encontrado.");
 	}
-}
+} */
 
 float *Bhv_BasicMove::readQFile()
 {
@@ -191,9 +222,9 @@ float *Bhv_BasicMove::readQFile()
 
 	if (file)
 	{
-		float q[5];
+		float q[Q_SIZE];
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < Q_SIZE; i++)
 		{
 			fscanf(file, "%f", &q[i]);
 		}
@@ -202,7 +233,7 @@ float *Bhv_BasicMove::readQFile()
 
 		printf("\n----------------------\n");
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < Q_SIZE; i++)
 		{
 			printf("%f ", q[i]);
 		}
@@ -227,8 +258,7 @@ int Bhv_BasicMove::selectStrategy()
 	}
 	else
 	{ // melhor ação/estratégia
-		float *q;
-		q = readQFile();
+		float *q = readQFile();
 		int n = sizeof(q) / sizeof(q[0]); // tamanho do array
 		cout << "\n----------------------\nn: " << n << "\n----------------------" << endl;
 
@@ -248,7 +278,7 @@ int Bhv_BasicMove::selectStrategy()
 
 		cout << "\n----------------------\nmax: " << max << "\n----------------------" << endl;
 		cout << "\n----------------------\nposition: " << position << "\n----------------------" << endl;
-		selectedStrategy = position;
+		selectedStrategy = position + 1;
 		// writeFlagFile(0, 1);
 	}
 
@@ -277,13 +307,12 @@ bool Bhv_BasicMove::execute(PlayerAgent *agent)
 	if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
 	{
 		selectedStrategy = selectStrategy();
-
-		writeFlagFile(0, 0);
+		writeFlagFile(0);
 	}
 
 	if (wm.time().cycle() >= 5900 && wm.seeTime().cycle() <= 6000)
 	{
-		openQFile(our_score);
+		writeQFile(selectedStrategy - 1, our_score);
 	}
 
 	// FIM: UFRBots 2022/2023 - Kelly

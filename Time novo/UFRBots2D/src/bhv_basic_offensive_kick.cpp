@@ -222,11 +222,12 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
             strategy = 4;
         }
     } */
+    cout << "\n----------------------\nStrategy: " << strategy << "\n----------------------" << endl;
 
-    printf("\n----------------------\nStrategy: ");
-    cout << strategy << endl; // Exibe a estratégia atual
-    printf("\n----------------------\n");
-    // FIM: UFRBots 2022/2023 - Kelly
+    // printf("\n----------------------\nStrategy: ");
+    // cout << strategy << endl; // Exibe a estratégia atual
+    // printf("\n----------------------\n");
+    //  FIM: UFRBots 2022/2023 - Kelly
 
     Vector2D ball = wm.ball().pos();
     Vector2D me = wm.self().pos();
