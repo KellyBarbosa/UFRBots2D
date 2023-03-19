@@ -38,10 +38,11 @@ public:
     void writeQFile(int strategy, int gols);
     void writeFlagFile(int flagValue);
     int readFlagFile();
-    int selectStrategy();
+    // int selectStrategy();
     float *readQFile();
+    const double e = 0.01;
+    const int q_size = 4;
     // FIM: UFRBots 2022/2023 - Kelly
-
     Bhv_BasicMove()
     {
     }

@@ -75,6 +75,158 @@ using namespace rcsc;
 
 // INÍCIO: UFRBots 2022/2023 - Kelly
 #include "bhv_basic_move.h"
+// #define e 0.01
+
+void Bhv_BasicOffensiveKick::selectStrategy()
+{
+    cout << "\nAqui" << endl;
+    const double e_alea = (float)rand() / RAND_MAX;
+    cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
+    int selectedStrategy;
+    // int e =
+    if (e_alea <= Bhv_BasicMove().e)
+    { // ação/estratégia aleatória
+        cout << "\n----------------------ação/estratégia aleatória----------------------" << endl;
+
+        selectedStrategy = rand() % 4 + 1;
+        cout << "\n----------------------\ne: " << Bhv_BasicMove().e << "\n----------------------" << endl;
+    }
+    else
+    { // melhor ação/estratégia
+        cout << "\n----------------------melhor ação/estratégia----------------------" << endl;
+        FILE *file;
+        file = fopen("arquivos/q.txt", "r");
+
+        if (file)
+        {
+            float q[Bhv_BasicMove().q_size];
+
+            for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+            {
+                fscanf(file, "%f", &q[i]);
+            }
+
+            fclose(file);
+
+            printf("\n**************************\n");
+
+            for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+            {
+                printf("%f ", q[i]);
+            }
+            printf("\n**************************\n");
+            float max = q[0];
+            int position = 0;
+            for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+            {
+                if (q[i] > max)
+                {
+                    max = q[i];
+                    position = i;
+                }
+            }
+            cout << "\n----------------------\nn: " << Bhv_BasicMove().q_size << "\n----------------------" << endl;
+            cout << "\n----------------------\nmax: " << max << "\n----------------------" << endl;
+            cout << "\n----------------------\nposition: " << position << "\n----------------------" << endl;
+            selectedStrategy = position + 1;
+        }
+        else
+        {
+            printf("Arquivo não encontrado.");
+        }
+
+        // int n = sizeof(q) / sizeof(q[0]); // tamanho do array
+
+        // float maxQ = *max_element(q, q + n); // maior valor do array
+        // cout << "\n----------------------\nmaxQ: " << maxQ << "\n----------------------" << endl;
+
+        // writeFlagFile(0, 1);
+    }
+
+    // return selectedStrategy;
+    saveStrategy(selectedStrategy);
+}
+
+/* void Bhv_BasicOffensiveKick::selectStrategy()
+{
+    cout << "\nAqui" << endl;
+    const double e_alea = (float)rand() / RAND_MAX;
+    cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
+    int selectedStrategy;
+    // int e =
+    if (e_alea <= Bhv_BasicMove().e)
+    { // ação/estratégia aleatória
+        cout << "\n----------------------ação/estratégia aleatória----------------------" << endl;
+
+        selectedStrategy = rand() % 4 + 1;
+        cout << "\n----------------------\ne: " << Bhv_BasicMove().e << "\n----------------------" << endl;
+    }
+    else
+    { // melhor ação/estratégia
+        cout << "\n----------------------melhor ação/estratégia----------------------" << endl;
+        float *q = Bhv_BasicMove().readQFile();
+        printf("\n**************************\n");
+        cout << q << endl;
+        for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+        {
+            cout << "\n----------------------ENTROU NO FOR----------------------" << endl;
+            cout << q[i] << endl;
+            // printf("%f ", q[i]);
+        }
+        printf("\n**************************\n");
+
+        // int n = sizeof(q) / sizeof(q[0]); // tamanho do array
+
+        // float maxQ = *max_element(q, q + n); // maior valor do array
+        // cout << "\n----------------------\nmaxQ: " << maxQ << "\n----------------------" << endl;
+
+        float max = q[0];
+        int position = 0;
+        for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+        {
+            if (q[i] > max)
+            {
+                max = q[i];
+                position = i;
+            }
+        }
+        cout << "\n----------------------\nn: " << Bhv_BasicMove().q_size << "\n----------------------" << endl;
+        cout << "\n----------------------\nmax: " << max << "\n----------------------" << endl;
+        cout << "\n----------------------\nposition: " << position << "\n----------------------" << endl;
+        selectedStrategy = position + 1;
+        // writeFlagFile(0, 1);
+    }
+
+    // return selectedStrategy;
+    saveStrategy(selectedStrategy);
+} */
+
+void Bhv_BasicOffensiveKick::saveStrategy(int strategy)
+{
+    FILE *file;
+    file = fopen("arquivos/strategy.txt", "w");
+    fprintf(file, "%d", strategy);
+    fclose(file);
+}
+
+int Bhv_BasicOffensiveKick::readStrategy()
+{
+    FILE *file;
+    file = fopen("arquivos/strategy.txt", "r");
+
+    if (file)
+    {
+        int s;
+        fscanf(file, "%d", &s);
+        fclose(file);
+        return s;
+    }
+    else
+    {
+        printf("Arquivo não encontrado.");
+    }
+}
+
 // FIM: UFRBots 2022/2023 - Kelly
 
 bool Bhv_BasicOffensiveKick::execute(PlayerAgent *agent)
@@ -186,9 +338,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     // INÍCIO: UFRBots 2022/2023 - Kelly
 
     // int sortStrategy;
-    int strategy = Bhv_BasicMove().selectStrategy();
-
-    // int e_alea = Bhv_BasicMove().readFlagFile(0); // A função a ser chamada não é esta, a função ainda será criada
+    // int strategy = Bhv_BasicMove().selectStrategy();
 
     int our_score = (wm.ourSide() == LEFT
                          ? wm.gameMode().scoreLeft()
@@ -198,6 +348,18 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
                          : wm.gameMode().scoreLeft());
     /* const double e_alea = (float)rand() / RAND_MAX;
     cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl; */
+    if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
+    {
+        // int strategy = selectStrategy();
+        strategy = 1;
+        selectStrategy();
+        Bhv_BasicMove().writeFlagFile(0);
+    }
+    else
+    {
+        strategy = readStrategy();
+    }
+
     int score = our_score - opp_score;
     // int strategy = 1;
     /* if (wm.time().cycle() <= 3000)

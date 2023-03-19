@@ -65,8 +65,10 @@ using std::stringstream;
 
 #define ALPHA 0.75
 #define GAMA 0.15
-#define e 0.01
-#define Q_SIZE 4
+// #define e 0.01
+// #define Q_SIZE 4
+
+#include "bhv_basic_offensive_kick.h"
 
 void Bhv_BasicMove::writeFlagFile(int flagValue)
 {
@@ -136,7 +138,7 @@ void Bhv_BasicMove::writeQFile(int strategy, int gols)
 		FILE *file;
 		file = fopen("arquivos/q.txt", "w");
 
-		for (int i = 0; i < Q_SIZE; i++)
+		for (int i = 0; i < q_size; i++)
 		{
 
 			fprintf(file, "%.2f ", q[i]);
@@ -152,69 +154,6 @@ void Bhv_BasicMove::writeQFile(int strategy, int gols)
 	}
 }
 
-/* void Bhv_BasicMove::writeQFile(int strategy, int gols)
-{
-	FILE *file;
-	file = fopen("arquivos/q.txt", "r");
-
-	float r;
-
-	if (file)
-	{
-		float q[Q_SIZE];
-
-		for (int i = 0; i < Q_SIZE; i++)
-		{
-			fscanf(file, "%f", &q[i]);
-		}
-
-		fclose(file);
-
-		printf("\n----------------------\n");
-
-		for (int i = 0; i < Q_SIZE; i++)
-		{
-			printf("%f ", q[i]);
-		}
-		printf("\n----------------------\n");
-
-		if (readFlagFile() == 0)
-		{
-			printf("\n ****************** Pode escrever ******************\n");
-			printf("\n----------------------\nOUR: ");
-			cout << strategy << endl; // Exibe a estratégia utilizada durante a partida
-			printf("\n----------------------\n");
-			FILE *file;
-			file = fopen("arquivos/q.txt", "w");
-
-			for (int i = 0; i < Q_SIZE; i++)
-			{
-
-				if (i % 2 == 0)
-				{
-					fprintf(file, "%.2f ", q[i] * 2);
-				}
-				else
-				{
-					fprintf(file, "%.2f ", q[i] * 5);
-				}
-			}
-
-			writeFlagFile(1); // Indica que o arquivo já foi escrito
-
-			fclose(file);
-		}
-		else
-		{
-			printf("\n ****************** Não pode escrever ******************\n");
-		}
-	}
-	else
-	{
-		printf("Arquivo não encontrado.");
-	}
-} */
-
 float *Bhv_BasicMove::readQFile()
 {
 	FILE *file;
@@ -222,9 +161,9 @@ float *Bhv_BasicMove::readQFile()
 
 	if (file)
 	{
-		float q[Q_SIZE];
+		float q[q_size];
 
-		for (int i = 0; i < Q_SIZE; i++)
+		for (int i = 0; i < q_size; i++)
 		{
 			fscanf(file, "%f", &q[i]);
 		}
@@ -233,7 +172,7 @@ float *Bhv_BasicMove::readQFile()
 
 		printf("\n----------------------\n");
 
-		for (int i = 0; i < Q_SIZE; i++)
+		for (int i = 0; i < q_size; i++)
 		{
 			printf("%f ", q[i]);
 		}
@@ -247,7 +186,7 @@ float *Bhv_BasicMove::readQFile()
 	}
 }
 
-int Bhv_BasicMove::selectStrategy()
+/* int Bhv_BasicMove::selectStrategy()
 {
 	const double e_alea = (float)rand() / RAND_MAX;
 	cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
@@ -283,7 +222,7 @@ int Bhv_BasicMove::selectStrategy()
 	}
 
 	return selectedStrategy;
-}
+} */
 
 // FIM: UFRBots 2022/2023 - Kelly
 
@@ -303,15 +242,16 @@ bool Bhv_BasicMove::execute(PlayerAgent *agent)
 											 ? wm.gameMode().scoreLeft()
 											 : wm.gameMode().scoreRight());
 
-	int selectedStrategy;
-	if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
+	/* if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
 	{
 		selectedStrategy = selectStrategy();
 		writeFlagFile(0);
-	}
+	} */
 
 	if (wm.time().cycle() >= 5900 && wm.seeTime().cycle() <= 6000)
 	{
+		int selectedStrategy = Bhv_BasicOffensiveKick().strategy;
+		cout << "\n----------------------\nselectedStrategy - move: " << selectedStrategy << "\n----------------------" << endl;
 		writeQFile(selectedStrategy - 1, our_score);
 	}
 

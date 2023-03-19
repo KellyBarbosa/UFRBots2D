@@ -27,10 +27,10 @@
 /////////////////////////////////////////////////////////////////////
 /*
 
-Modificado por André Ottoni - andreottoni@ymail.com
-Time UaiSoccer2D de Futebol de Robôs Simulado
-UFSJ - Universidade Federal de São João del Rei
-Robocup 2012 - México
+Modificado por Andrï¿½ Ottoni - andreottoni@ymail.com
+Time UaiSoccer2D de Futebol de Robï¿½s Simulado
+UFSJ - Universidade Federal de Sï¿½o Joï¿½o del Rei
+Robocup 2012 - Mï¿½xico
 
 */
 
@@ -41,24 +41,24 @@ Robocup 2012 - México
 
 #include <rcsc/player/soccer_action.h>
 
-
 class Bhv_BasicOffensiveKick
-    : public rcsc::SoccerBehavior {
+    : public rcsc::SoccerBehavior
+{
 
 private:
-
-   
 public:
-
-    bool execute( rcsc::PlayerAgent * agent );
-    //int mostrarestado(rcsc::PlayerAgent * agent );
-    //Declaração dos novos métodos
-    int recebeestado(rcsc::PlayerAgent * agent);
-    int executaacao( rcsc::PlayerAgent * agent, int acao_q, int estado);
-    //float calculafuzzy(rcsc::PlayerAgent * agent);
-    int *recompensa( rcsc::PlayerAgent * agent, int acao_q);
-    //int novoestado(rcsc::PlayerAgent * agent);
-
+    bool execute(rcsc::PlayerAgent *agent);
+    // int mostrarestado(rcsc::PlayerAgent * agent );
+    // Declaraï¿½ï¿½o dos novos mï¿½todos
+    int recebeestado(rcsc::PlayerAgent *agent);
+    int executaacao(rcsc::PlayerAgent *agent, int acao_q, int estado);
+    // float calculafuzzy(rcsc::PlayerAgent * agent);
+    int *recompensa(rcsc::PlayerAgent *agent, int acao_q);
+    // int novoestado(rcsc::PlayerAgent * agent);
+    void selectStrategy();
+    int strategy;
+    void saveStrategy(int strategy);
+    int readStrategy();
 };
 
 #endif
