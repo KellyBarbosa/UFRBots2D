@@ -1,0 +1,8 @@
+Instruções para uso do script de montagem de simulação do ambiente.
+
+1. Baixe o script
+2. Execute o seguinte comando na pasta onde o download foi realizado: chmod a+x rcss.sh
+3. Execute o script com o seguinte: ./rcss.sh
+4. Informe a senha quando for solicitado
+5. Aguarde a instalação finalizar 
+6. Verifique se o ambiente foi instalado executando o comando: rcsoccersim
