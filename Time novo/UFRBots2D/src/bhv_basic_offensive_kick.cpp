@@ -74,8 +74,7 @@ using namespace std;
 using namespace rcsc;
 
 // INÍCIO: UFRBots 2022/2023 - Kelly
-#include "bhv_basic_move.h"
-// #define e 0.01
+// #include "bhv_basic_move.h"
 
 void Bhv_BasicOffensiveKick::selectStrategy()
 {
@@ -84,12 +83,12 @@ void Bhv_BasicOffensiveKick::selectStrategy()
     cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
     int selectedStrategy;
     // int e =
-    if (e_alea <= Bhv_BasicMove().e)
+    if (e_alea <= e)
     { // ação/estratégia aleatória
         cout << "\n----------------------ação/estratégia aleatória----------------------" << endl;
 
         selectedStrategy = rand() % 4 + 1;
-        cout << "\n----------------------\ne: " << Bhv_BasicMove().e << "\n----------------------" << endl;
+        cout << "\n----------------------\ne: " << e << "\n----------------------" << endl;
     }
     else
     { // melhor ação/estratégia
@@ -99,9 +98,9 @@ void Bhv_BasicOffensiveKick::selectStrategy()
 
         if (file)
         {
-            float q[Bhv_BasicMove().q_size];
+            float q[q_size];
 
-            for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+            for (int i = 0; i < q_size; i++)
             {
                 fscanf(file, "%f", &q[i]);
             }
@@ -110,14 +109,14 @@ void Bhv_BasicOffensiveKick::selectStrategy()
 
             printf("\n**************************\n");
 
-            for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+            for (int i = 0; i < q_size; i++)
             {
                 printf("%f ", q[i]);
             }
             printf("\n**************************\n");
             float max = q[0];
             int position = 0;
-            for (int i = 0; i < Bhv_BasicMove().q_size; i++)
+            for (int i = 0; i < q_size; i++)
             {
                 if (q[i] > max)
                 {
@@ -125,7 +124,7 @@ void Bhv_BasicOffensiveKick::selectStrategy()
                     position = i;
                 }
             }
-            cout << "\n----------------------\nn: " << Bhv_BasicMove().q_size << "\n----------------------" << endl;
+            cout << "\n----------------------\nn: " << q_size << "\n----------------------" << endl;
             cout << "\n----------------------\nmax: " << max << "\n----------------------" << endl;
             cout << "\n----------------------\nposition: " << position << "\n----------------------" << endl;
             selectedStrategy = position + 1;
@@ -146,60 +145,6 @@ void Bhv_BasicOffensiveKick::selectStrategy()
     // return selectedStrategy;
     saveStrategy(selectedStrategy);
 }
-
-/* void Bhv_BasicOffensiveKick::selectStrategy()
-{
-    cout << "\nAqui" << endl;
-    const double e_alea = (float)rand() / RAND_MAX;
-    cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
-    int selectedStrategy;
-    // int e =
-    if (e_alea <= Bhv_BasicMove().e)
-    { // ação/estratégia aleatória
-        cout << "\n----------------------ação/estratégia aleatória----------------------" << endl;
-
-        selectedStrategy = rand() % 4 + 1;
-        cout << "\n----------------------\ne: " << Bhv_BasicMove().e << "\n----------------------" << endl;
-    }
-    else
-    { // melhor ação/estratégia
-        cout << "\n----------------------melhor ação/estratégia----------------------" << endl;
-        float *q = Bhv_BasicMove().readQFile();
-        printf("\n**************************\n");
-        cout << q << endl;
-        for (int i = 0; i < Bhv_BasicMove().q_size; i++)
-        {
-            cout << "\n----------------------ENTROU NO FOR----------------------" << endl;
-            cout << q[i] << endl;
-            // printf("%f ", q[i]);
-        }
-        printf("\n**************************\n");
-
-        // int n = sizeof(q) / sizeof(q[0]); // tamanho do array
-
-        // float maxQ = *max_element(q, q + n); // maior valor do array
-        // cout << "\n----------------------\nmaxQ: " << maxQ << "\n----------------------" << endl;
-
-        float max = q[0];
-        int position = 0;
-        for (int i = 0; i < Bhv_BasicMove().q_size; i++)
-        {
-            if (q[i] > max)
-            {
-                max = q[i];
-                position = i;
-            }
-        }
-        cout << "\n----------------------\nn: " << Bhv_BasicMove().q_size << "\n----------------------" << endl;
-        cout << "\n----------------------\nmax: " << max << "\n----------------------" << endl;
-        cout << "\n----------------------\nposition: " << position << "\n----------------------" << endl;
-        selectedStrategy = position + 1;
-        // writeFlagFile(0, 1);
-    }
-
-    // return selectedStrategy;
-    saveStrategy(selectedStrategy);
-} */
 
 void Bhv_BasicOffensiveKick::saveStrategy(int strategy)
 {
@@ -224,6 +169,122 @@ int Bhv_BasicOffensiveKick::readStrategy()
     else
     {
         printf("Arquivo não encontrado.");
+        return NULL;
+    }
+}
+
+void Bhv_BasicOffensiveKick::writeFlagFile(int flagValue)
+{
+    FILE *fileController;
+    fileController = fopen("arquivos/q_controller.txt", "w");
+
+    if (fileController)
+    {
+        // int flag = flagValue;
+
+        fprintf(fileController, "%d", flagValue);
+
+        fclose(fileController);
+    }
+    else
+    {
+        printf("Erro ao abrir o arquivo de controle.");
+    }
+}
+
+int Bhv_BasicOffensiveKick::readFlagFile()
+{
+    FILE *fileController;
+
+    fileController = fopen("arquivos/q_controller.txt", "r");
+
+    if (fileController)
+    {
+        int flag;
+
+        fscanf(fileController, "%d", &flag);
+
+        fclose(fileController);
+
+        return flag;
+    }
+    else
+    {
+        printf("Erro ao abrir o arquivo de controle.");
+    }
+}
+
+void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
+{
+    float *q = readQFile();
+    int n = sizeof(q) / sizeof(q[0]); // tamanho do array
+    cout << "\n----------------------\nn - writeQFile: " << n << "\n----------------------" << endl;
+    float max = q[0];
+    int position = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (q[i] > max)
+        {
+            max = q[i];
+            position = i;
+        }
+    }
+
+    float newQ = q[strategy] + alpha * (gols + gamma * max - q[strategy]);
+    q[strategy] = newQ;
+
+    if (readFlagFile() == 0) // Indica que o arquivo não foi escrito ainda
+    {
+        printf("\n ****************** Pode escrever ******************\n");
+        FILE *file;
+        file = fopen("arquivos/q.txt", "w");
+
+        for (int i = 0; i < q_size; i++)
+        {
+
+            fprintf(file, "%.2f ", q[i]);
+        }
+
+        writeFlagFile(1); // Indica que o arquivo já foi escrito
+
+        fclose(file);
+    }
+    else
+    {
+        printf("\n ****************** Não pode escrever ******************\n");
+    }
+}
+
+float *Bhv_BasicOffensiveKick::readQFile()
+{
+    FILE *file;
+    file = fopen("arquivos/q.txt", "r");
+
+    if (file)
+    {
+        float q[q_size];
+
+        for (int i = 0; i < q_size; i++)
+        {
+            fscanf(file, "%f", &q[i]);
+        }
+
+        fclose(file);
+
+        printf("\n----------------------\n");
+
+        for (int i = 0; i < q_size; i++)
+        {
+            printf("%f ", q[i]);
+        }
+        printf("\n----------------------\n");
+
+        return q;
+    }
+    else
+    {
+        printf("Arquivo não encontrado.");
+        return NULL;
     }
 }
 
@@ -353,11 +414,17 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         // int strategy = selectStrategy();
         strategy = 1;
         selectStrategy();
-        Bhv_BasicMove().writeFlagFile(0);
+        writeFlagFile(0);
     }
     else
     {
         strategy = readStrategy();
+    }
+    if (wm.time().cycle() >= 5900 && wm.seeTime().cycle() <= 6000)
+    {
+        // int selectedStrategy = Bhv_BasicOffensiveKick().strategy;
+        cout << "\n----------------------\nSelectedStrategy: " << strategy << "\n----------------------" << endl;
+        writeQFile(strategy - 1, our_score);
     }
 
     int score = our_score - opp_score;

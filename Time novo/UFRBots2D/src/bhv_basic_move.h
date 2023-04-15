@@ -35,13 +35,12 @@ class Bhv_BasicMove
 {
 public:
     // INÍCIO: UFRBots 2022/2023 - Kelly
-    void writeQFile(int strategy, int gols);
-    void writeFlagFile(int flagValue);
-    int readFlagFile();
-    // int selectStrategy();
-    float *readQFile();
-    const double e = 0.01;
-    const int q_size = 4;
+    /*    void writeQFile(int strategy, int gols);
+       void writeFlagFile(int flagValue);
+       int readFlagFile();
+       float *readQFile();
+       const double e = 0.01;
+       const int q_size = 4; */
     // FIM: UFRBots 2022/2023 - Kelly
     Bhv_BasicMove()
     {

@@ -63,13 +63,13 @@ using namespace rcsc;
 using namespace std;
 using std::stringstream;
 
-#define ALPHA 0.75
-#define GAMA 0.15
+/* #define ALPHA 0.75
+#define GAMA 0.15 */
 // #define e 0.01
 // #define Q_SIZE 4
 
-#include "bhv_basic_offensive_kick.h"
-
+// #include "bhv_basic_offensive_kick.h"
+/*
 void Bhv_BasicMove::writeFlagFile(int flagValue)
 {
 	FILE *fileController;
@@ -185,7 +185,7 @@ float *Bhv_BasicMove::readQFile()
 		printf("Arquivo não encontrado.");
 	}
 }
-
+ */
 /* int Bhv_BasicMove::selectStrategy()
 {
 	const double e_alea = (float)rand() / RAND_MAX;
@@ -238,9 +238,9 @@ bool Bhv_BasicMove::execute(PlayerAgent *agent)
 
 	// INÍCIO: UFRBots 2022/2023 - Kelly
 	// Gols do nosso time
-	int our_score = (wm.ourSide() == LEFT
-											 ? wm.gameMode().scoreLeft()
-											 : wm.gameMode().scoreRight());
+	/* 	int our_score = (wm.ourSide() == LEFT
+												 ? wm.gameMode().scoreLeft()
+												 : wm.gameMode().scoreRight()); */
 
 	/* if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
 	{
@@ -248,12 +248,12 @@ bool Bhv_BasicMove::execute(PlayerAgent *agent)
 		writeFlagFile(0);
 	} */
 
-	if (wm.time().cycle() >= 5900 && wm.seeTime().cycle() <= 6000)
-	{
-		int selectedStrategy = Bhv_BasicOffensiveKick().strategy;
-		cout << "\n----------------------\nselectedStrategy - move: " << selectedStrategy << "\n----------------------" << endl;
-		writeQFile(selectedStrategy - 1, our_score);
-	}
+	/* 	if (wm.time().cycle() >= 5900 && wm.seeTime().cycle() <= 6000)
+		{
+			int selectedStrategy = Bhv_BasicOffensiveKick().strategy;
+			cout << "\n----------------------\nselectedStrategy - move: " << selectedStrategy << "\n----------------------" << endl;
+			writeQFile(selectedStrategy - 1, our_score);
+		} */
 
 	// FIM: UFRBots 2022/2023 - Kelly
 
