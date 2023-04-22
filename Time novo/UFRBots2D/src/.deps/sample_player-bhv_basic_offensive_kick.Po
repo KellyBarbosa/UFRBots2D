@@ -411,7 +411,7 @@ sample_player-bhv_basic_offensive_kick.o: bhv_basic_offensive_kick.cpp \
  /usr/local/include/rcsc/action/shoot_table2008.h \
  /usr/local/include/rcsc/action/body_smart_kick.h \
  /usr/local/include/rcsc/action/kick_table.h \
- /usr/local/include/rcsc/action/body_kick_one_step.h bhv_basic_move.h
+ /usr/local/include/rcsc/action/body_kick_one_step.h
 
 /usr/include/stdc-predef.h:
 
@@ -1382,5 +1382,3 @@ bhv_basic_offensive_kick.h:
 /usr/local/include/rcsc/action/kick_table.h:
 
 /usr/local/include/rcsc/action/body_kick_one_step.h:
-
-bhv_basic_move.h:
