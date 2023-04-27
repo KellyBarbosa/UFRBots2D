@@ -216,43 +216,71 @@ int Bhv_BasicOffensiveKick::readFlagFile()
 
 void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
 {
-    float *q = readQFile();
-    int n = sizeof(q) / sizeof(q[0]); // tamanho do array
-    cout << "\n----------------------\nn - writeQFile: " << n << "\n----------------------" << endl;
-    float max = q[0];
-    int position = 0;
-    for (int i = 0; i < n; i++)
-    {
-        if (q[i] > max)
-        {
-            max = q[i];
-            position = i;
-        }
-    }
+    //float *q = readQFile();
+    FILE *file;
+    file = fopen("arquivos/q.txt", "r");
 
-    float newQ = q[strategy] + alpha * (gols + gamma * max - q[strategy]);
-    q[strategy] = newQ;
-
-    if (readFlagFile() == 0) // Indica que o arquivo não foi escrito ainda
+    if (file)
     {
-        printf("\n ****************** Pode escrever ******************\n");
-        FILE *file;
-        file = fopen("arquivos/q.txt", "w");
+        float q[q_size];
 
         for (int i = 0; i < q_size; i++)
         {
-
-            fprintf(file, "%.2f ", q[i]);
+            fscanf(file, "%f", &q[i]);
         }
 
-        writeFlagFile(1); // Indica que o arquivo já foi escrito
-
         fclose(file);
+
+        printf("\n----------------------\n");
+
+        for (int i = 0; i < q_size; i++)
+        {
+            printf("%f ", q[i]);
+        }
+        printf("\n----------------------\n");
+        //int n = sizeof(q) / sizeof(q[0]); // tamanho do array
+            cout << "\n----------------------\nn - writeQFile: " << n << "\n----------------------" << endl;
+            float max = q[0];
+            int position = 0;
+            for (int i = 0; i < q_size; i++)
+            {
+                if (q[i] > max)
+                {
+                    max = q[i];
+                    position = i;
+                }
+            }
+
+            float newQ = q[strategy] + alpha * (gols + gamma * max - q[strategy]);
+            q[strategy] = newQ;
+
+            if (readFlagFile() == 0) // Indica que o arquivo não foi escrito ainda
+            {
+                printf("\n ****************** Pode escrever ******************\n");
+                FILE *file;
+                file = fopen("arquivos/q.txt", "w");
+
+                for (int i = 0; i < q_size; i++)
+                {
+                    fprintf(file, "%.2f ", q[i]);
+                }
+
+                writeFlagFile(1); // Indica que o arquivo já foi escrito
+
+                fclose(file);
+            }
+            else
+            {
+                printf("\n ****************** Não pode escrever ******************\n");
+            }
+
     }
     else
     {
-        printf("\n ****************** Não pode escrever ******************\n");
+        printf("Arquivo não encontrado.");
     }
+
+   
 }
 
 float *Bhv_BasicOffensiveKick::readQFile()
