@@ -23,7 +23,7 @@ DIR=`dirname $0`
 
 player="${DIR}/sample_player"
 coach="${DIR}/sample_coach"
-teamname="UFRBots2DFuzzy"
+teamname="UFRBots2D"
 host="localhost"
 port=6000
 coach_port=""

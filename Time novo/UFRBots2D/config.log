@@ -30,6 +30,9 @@ uname -v = #165-Ubuntu SMP Tue Apr 18 08:53:12 UTC 2023
 PATH: /home/kelly/.yarn/bin
 PATH: /home/kelly/.config/yarn/global/node_modules/.bin
 PATH: /home/kelly/anaconda3/bin
+PATH: /home/kelly/.yarn/bin
+PATH: /home/kelly/.config/yarn/global/node_modules/.bin
+PATH: /home/kelly/anaconda3/bin
 PATH: /home/kelly/.local/share/zinit/polaris/bin
 PATH: /home/kelly/.local/bin
 PATH: /home/kelly/bin

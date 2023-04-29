@@ -74,21 +74,17 @@ using namespace std;
 using namespace rcsc;
 
 // INÍCIO: UFRBots 2022/2023 - Kelly
-// #include "bhv_basic_move.h"
 
 void Bhv_BasicOffensiveKick::selectStrategy()
 {
-    cout << "\nAqui" << endl;
     const double e_alea = (float)rand() / RAND_MAX;
-    cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl;
+    cout << "\n----------------------e_alea: " << e_alea << "----------------------" << endl;
     int selectedStrategy;
-    // int e =
     if (e_alea <= e)
     { // ação/estratégia aleatória
         cout << "\n----------------------ação/estratégia aleatória----------------------" << endl;
-
         selectedStrategy = rand() % 4 + 1;
-        cout << "\n----------------------\ne: " << e << "\n----------------------" << endl;
+        cout << "\n----------------------selectedStrategy: " << selectedStrategy << "----------------------" << endl;
     }
     else
     { // melhor ação/estratégia
@@ -124,25 +120,16 @@ void Bhv_BasicOffensiveKick::selectStrategy()
                     position = i;
                 }
             }
-            cout << "\n----------------------\nn: " << q_size << "\n----------------------" << endl;
-            cout << "\n----------------------\nmax: " << max << "\n----------------------" << endl;
-            cout << "\n----------------------\nposition: " << position << "\n----------------------" << endl;
+            // cout << "\n----------------------\nn: " << q_size << "\n----------------------" << endl;
+            // cout << "\n----------------------max: " << max << "----------------------" << endl;
+            // cout << "\n----------------------position: " << position << "----------------------" << endl;
             selectedStrategy = position + 1;
         }
         else
         {
             printf("Arquivo não encontrado.");
         }
-
-        // int n = sizeof(q) / sizeof(q[0]); // tamanho do array
-
-        // float maxQ = *max_element(q, q + n); // maior valor do array
-        // cout << "\n----------------------\nmaxQ: " << maxQ << "\n----------------------" << endl;
-
-        // writeFlagFile(0, 1);
     }
-
-    // return selectedStrategy;
     saveStrategy(selectedStrategy);
 }
 
@@ -180,10 +167,7 @@ void Bhv_BasicOffensiveKick::writeFlagFile(int flagValue)
 
     if (fileController)
     {
-        // int flag = flagValue;
-
         fprintf(fileController, "%d", flagValue);
-
         fclose(fileController);
     }
     else
@@ -217,7 +201,6 @@ int Bhv_BasicOffensiveKick::readFlagFile()
 void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
 {
     cout << "\n---------------------- writeQFile: " << strategy << " | " << gols << "----------------------" << endl;
-    // float *q = readQFile();
     FILE *file;
     file = fopen("arquivos/q.txt", "r");
 
@@ -263,7 +246,7 @@ void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
 
             for (int i = 0; i < q_size; i++)
             {
-                fprintf(file, "%.2f ", q[i]);
+                fprintf(file, "%.4f ", q[i]);
             }
 
             writeFlagFile(1); // Indica que o arquivo já foi escrito
@@ -280,39 +263,6 @@ void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
         printf("Arquivo não encontrado.");
     }
 }
-
-/* float *Bhv_BasicOffensiveKick::readQFile()
-{
-    FILE *file;
-    file = fopen("arquivos/q.txt", "r");
-
-    if (file)
-    {
-        float q[q_size];
-
-        for (int i = 0; i < q_size; i++)
-        {
-            fscanf(file, "%f", &q[i]);
-        }
-
-        fclose(file);
-
-        printf("\n----------------------\n");
-
-        for (int i = 0; i < q_size; i++)
-        {
-            printf("%f ", q[i]);
-        }
-        printf("\n----------------------\n");
-
-        return q;
-    }
-    else
-    {
-        printf("Arquivo não encontrado.");
-        return NULL;
-    }
-} */
 
 // FIM: UFRBots 2022/2023 - Kelly
 
@@ -424,20 +374,15 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
 
     // INÍCIO: UFRBots 2022/2023 - Kelly
 
-    // int sortStrategy;
-    // int strategy = Bhv_BasicMove().selectStrategy();
-
     int our_score = (wm.ourSide() == LEFT
                          ? wm.gameMode().scoreLeft()
                          : wm.gameMode().scoreRight());
     int opp_score = (wm.ourSide() == LEFT
                          ? wm.gameMode().scoreRight()
                          : wm.gameMode().scoreLeft());
-    /* const double e_alea = (float)rand() / RAND_MAX;
-    cout << "\n----------------------\ne_alea: " << e_alea << "\n----------------------" << endl; */
+
     if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
     {
-        // int strategy = selectStrategy();
         strategy = 1;
         selectStrategy();
         writeFlagFile(0);
@@ -448,40 +393,13 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     }
     if (wm.time().cycle() >= 5900 && wm.seeTime().cycle() <= 6000)
     {
-        // int selectedStrategy = Bhv_BasicOffensiveKick().strategy;
-        cout << "\n----------------------\nSelectedStrategy: " << strategy << "\n----------------------" << endl;
         writeQFile(strategy - 1, our_score);
     }
 
-    int score = our_score - opp_score;
-    // int strategy = 1;
-    /* if (wm.time().cycle() <= 3000)
-    {
-        if (score >= 0)
-        {
-            strategy = 1;
-        }
-        else
-        {
-            strategy = 2;
-        }
-    }
-    else
-    {
-        if (score >= 0)
-        {
-            strategy = 3;
-        }
-        else
-        {
-            strategy = 4;
-        }
-    } */
-    cout << "\n----------------------\nStrategy: " << strategy << "\n----------------------" << endl;
+    // int score = our_score - opp_score;
 
-    // printf("\n----------------------\nStrategy: ");
-    // cout << strategy << endl; // Exibe a estratégia atual
-    // printf("\n----------------------\n");
+    cout << "\n----------------------executaacao() - Strategy: " << strategy << "----------------------" << endl;
+
     //  FIM: UFRBots 2022/2023 - Kelly
 
     Vector2D ball = wm.ball().pos();

@@ -55,19 +55,19 @@ public:
     // float calculafuzzy(rcsc::PlayerAgent * agent);
     int *recompensa(rcsc::PlayerAgent *agent, int acao_q);
     // int novoestado(rcsc::PlayerAgent * agent);
+
     // INÍCIO: UFRBots 2022/2023 - Kelly
     void selectStrategy();
     int strategy;
     void saveStrategy(int strategy);
     int readStrategy();
-
     void writeQFile(int strategy, int gols);
     void writeFlagFile(int flagValue);
     int readFlagFile();
-    // float *readQFile();
     const double alpha = 0.75;
     const double gamma = 0.15;
-    const double e = 0.01;
+    // const double e = 0.01;
+    const double e = 0.75;
     const int q_size = 4;
     // FIM: UFRBots 2022/2023 - Kelly
 };

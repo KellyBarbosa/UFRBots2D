@@ -424,8 +424,7 @@ sample_player-bhv_basic_move.o: bhv_basic_move.cpp \
  /usr/local/include/rcsc/common/logger.h \
  /usr/local/include/rcsc/geom/sector_2d.h \
  /usr/local/include/rcsc/common/server_param.h \
- neck_offensive_intercept_neck.h /usr/include/c++/9/stdlib.h \
- /usr/include/c++/9/sstream /usr/include/c++/9/bits/sstream.tcc
+ neck_offensive_intercept_neck.h
 
 /usr/include/stdc-predef.h:
 
@@ -1430,9 +1429,3 @@ bhv_basic_tackle.h:
 /usr/local/include/rcsc/common/server_param.h:
 
 neck_offensive_intercept_neck.h:
-
-/usr/include/c++/9/stdlib.h:
-
-/usr/include/c++/9/sstream:
-
-/usr/include/c++/9/bits/sstream.tcc:
