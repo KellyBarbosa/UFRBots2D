@@ -64,7 +64,7 @@ public:
     void writeQFile(int strategy, int gols);
     void writeFlagFile(int flagValue);
     int readFlagFile();
-    float *readQFile();
+    // float *readQFile();
     const double alpha = 0.75;
     const double gamma = 0.15;
     const double e = 0.01;

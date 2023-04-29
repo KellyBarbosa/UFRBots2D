@@ -216,7 +216,8 @@ int Bhv_BasicOffensiveKick::readFlagFile()
 
 void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
 {
-    //float *q = readQFile();
+    cout << "\n---------------------- writeQFile: " << strategy << " | " << gols << "----------------------" << endl;
+    // float *q = readQFile();
     FILE *file;
     file = fopen("arquivos/q.txt", "r");
 
@@ -238,52 +239,49 @@ void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
             printf("%f ", q[i]);
         }
         printf("\n----------------------\n");
-        //int n = sizeof(q) / sizeof(q[0]); // tamanho do array
-            cout << "\n----------------------\nn - writeQFile: " << n << "\n----------------------" << endl;
-            float max = q[0];
-            int position = 0;
+        // int n = sizeof(q) / sizeof(q[0]); // tamanho do array
+        // cout << "\n----------------------\nn - writeQFile: " << n << "\n----------------------" << endl;
+        float max = q[0];
+        int position = 0;
+        for (int i = 0; i < q_size; i++)
+        {
+            if (q[i] > max)
+            {
+                max = q[i];
+                position = i;
+            }
+        }
+
+        float newQ = q[strategy] + alpha * (gols + gamma * max - q[strategy]);
+        q[strategy] = newQ;
+
+        if (readFlagFile() == 0) // Indica que o arquivo não foi escrito ainda
+        {
+            printf("\n ****************** Pode escrever ******************\n");
+            FILE *file;
+            file = fopen("arquivos/q.txt", "w");
+
             for (int i = 0; i < q_size; i++)
             {
-                if (q[i] > max)
-                {
-                    max = q[i];
-                    position = i;
-                }
+                fprintf(file, "%.2f ", q[i]);
             }
 
-            float newQ = q[strategy] + alpha * (gols + gamma * max - q[strategy]);
-            q[strategy] = newQ;
+            writeFlagFile(1); // Indica que o arquivo já foi escrito
 
-            if (readFlagFile() == 0) // Indica que o arquivo não foi escrito ainda
-            {
-                printf("\n ****************** Pode escrever ******************\n");
-                FILE *file;
-                file = fopen("arquivos/q.txt", "w");
-
-                for (int i = 0; i < q_size; i++)
-                {
-                    fprintf(file, "%.2f ", q[i]);
-                }
-
-                writeFlagFile(1); // Indica que o arquivo já foi escrito
-
-                fclose(file);
-            }
-            else
-            {
-                printf("\n ****************** Não pode escrever ******************\n");
-            }
-
+            fclose(file);
+        }
+        else
+        {
+            printf("\n ****************** Não pode escrever ******************\n");
+        }
     }
     else
     {
         printf("Arquivo não encontrado.");
     }
-
-   
 }
 
-float *Bhv_BasicOffensiveKick::readQFile()
+/* float *Bhv_BasicOffensiveKick::readQFile()
 {
     FILE *file;
     file = fopen("arquivos/q.txt", "r");
@@ -314,7 +312,7 @@ float *Bhv_BasicOffensiveKick::readQFile()
         printf("Arquivo não encontrado.");
         return NULL;
     }
-}
+} */
 
 // FIM: UFRBots 2022/2023 - Kelly
 
@@ -1150,9 +1148,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
 }
 
 // Retorna a Recompensa de Acordo com Par Estado/A��o
-int
-    *
-    Bhv_BasicOffensiveKick::recompensa(PlayerAgent *agent, int acao_q)
+int *Bhv_BasicOffensiveKick::recompensa(PlayerAgent *agent, int acao_q)
 {
 
     int R_M[24][6] = {{-1, 0, -1, -1, -1, -1},
