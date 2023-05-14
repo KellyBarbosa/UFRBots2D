@@ -78,13 +78,11 @@ using namespace rcsc;
 void Bhv_BasicOffensiveKick::selectStrategy()
 {
     const double e_alea = (float)rand() / RAND_MAX;
-    cout << "\n----------------------e_alea: " << e_alea << "----------------------" << endl;
     int selectedStrategy;
     if (e_alea <= e)
     { // ação/estratégia aleatória
         cout << "\n----------------------ação/estratégia aleatória----------------------" << endl;
-        selectedStrategy = rand() % 4 + 1;
-        cout << "\n----------------------selectedStrategy: " << selectedStrategy << "----------------------" << endl;
+        selectedStrategy = rand() % q_size + 1;
     }
     else
     { // melhor ação/estratégia
@@ -103,13 +101,6 @@ void Bhv_BasicOffensiveKick::selectStrategy()
 
             fclose(file);
 
-            printf("\n**************************\n");
-
-            for (int i = 0; i < q_size; i++)
-            {
-                printf("%f ", q[i]);
-            }
-            printf("\n**************************\n");
             float max = q[0];
             int position = 0;
             for (int i = 0; i < q_size; i++)
@@ -120,9 +111,6 @@ void Bhv_BasicOffensiveKick::selectStrategy()
                     position = i;
                 }
             }
-            // cout << "\n----------------------\nn: " << q_size << "\n----------------------" << endl;
-            // cout << "\n----------------------max: " << max << "----------------------" << endl;
-            // cout << "\n----------------------position: " << position << "----------------------" << endl;
             selectedStrategy = position + 1;
         }
         else
@@ -156,8 +144,8 @@ int Bhv_BasicOffensiveKick::readStrategy()
     else
     {
         printf("Arquivo não encontrado.");
-        return NULL;
     }
+    return 1; // Caso não seja possível ler o arquivo, garante que alguma estratégia seja selecionada
 }
 
 void Bhv_BasicOffensiveKick::writeFlagFile(int flagValue)
@@ -196,11 +184,12 @@ int Bhv_BasicOffensiveKick::readFlagFile()
     {
         printf("Erro ao abrir o arquivo de controle.");
     }
+    return 1; // Caso não seja possível ler o arquivo, retorna 1 indicando que o arquivo não pode ser escrito
 }
 
 void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
 {
-    cout << "\n---------------------- writeQFile: " << strategy << " | " << gols << "----------------------" << endl;
+    cout << "\n---------------------- writeQFile: " << strategy << " | " << gols << " ----------------------" << endl;
     FILE *file;
     file = fopen("arquivos/q.txt", "r");
 
@@ -215,15 +204,6 @@ void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
 
         fclose(file);
 
-        printf("\n----------------------\n");
-
-        for (int i = 0; i < q_size; i++)
-        {
-            printf("%f ", q[i]);
-        }
-        printf("\n----------------------\n");
-        // int n = sizeof(q) / sizeof(q[0]); // tamanho do array
-        // cout << "\n----------------------\nn - writeQFile: " << n << "\n----------------------" << endl;
         float max = q[0];
         int position = 0;
         for (int i = 0; i < q_size; i++)
@@ -396,9 +376,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         writeQFile(strategy - 1, our_score);
     }
 
-    // int score = our_score - opp_score;
-
-    cout << "\n----------------------executaacao() - Strategy: " << strategy << "----------------------" << endl;
+    cout << "\n---------------------- executaacao() - Strategy: " << strategy << " ----------------------" << endl;
 
     //  FIM: UFRBots 2022/2023 - Kelly
 
@@ -548,8 +526,9 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
             }
         }
     }
+
     // INÍCIO: UFRBots 2022/2023 - Kelly
-    int actions[40][4] = {
+    int actions[40][q_size] = {
         {2, 2, 1, 5}, // 1
         {2, 2, 1, 5}, // 2
         {5, 5, 1, 5}, // 3
@@ -716,6 +695,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         break;
     }
     // FIM: UFRBots 2022/2023 - Kelly
+
     const AngleDeg drib_angle = (drib_target - wm.self().pos()).th();
 
     const int max_dash_step = wm.self().playerType().cyclesToReachDistance(wm.self().pos().dist(drib_target));

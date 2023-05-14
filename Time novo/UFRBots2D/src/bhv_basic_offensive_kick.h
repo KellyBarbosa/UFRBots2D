@@ -66,7 +66,6 @@ public:
     int readFlagFile();
     const double alpha = 0.75;
     const double gamma = 0.15;
-    // const double e = 0.01;
     const double e = 0.75;
     const int q_size = 4;
     // FIM: UFRBots 2022/2023 - Kelly
