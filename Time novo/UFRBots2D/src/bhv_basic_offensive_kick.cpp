@@ -75,11 +75,15 @@ using namespace rcsc;
 
 // INÍCIO: UFRBots 2022/2023 - Kelly
 
+#define e_greedy 0.5
+#define alpha 0.125
+#define gamma 0.9
+
 void Bhv_BasicOffensiveKick::selectStrategy()
 {
     const double e_alea = (float)rand() / RAND_MAX;
     int selectedStrategy;
-    if (e_alea <= e)
+    if (e_alea <= e_greedy)
     { // ação/estratégia aleatória
         cout << "\n----------------------ação/estratégia aleatória----------------------" << endl;
         selectedStrategy = rand() % q_size + 1;
@@ -187,9 +191,9 @@ int Bhv_BasicOffensiveKick::readFlagFile()
     return 1; // Caso não seja possível ler o arquivo, retorna 1 indicando que o arquivo não pode ser escrito
 }
 
-void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
+void Bhv_BasicOffensiveKick::writeQFile(int strategy, int goal_balance)
 {
-    cout << "\n---------------------- writeQFile: " << strategy << " | " << gols << " ----------------------" << endl;
+    cout << "\n---------------------- writeQFile: " << strategy << " | " << goal_balance << " ----------------------" << endl;
     FILE *file;
     file = fopen("arquivos/q.txt", "r");
 
@@ -215,7 +219,7 @@ void Bhv_BasicOffensiveKick::writeQFile(int strategy, int gols)
             }
         }
 
-        float newQ = q[strategy] + alpha * (gols + gamma * max - q[strategy]);
+        float newQ = q[strategy] + alpha * (goal_balance + gamma * max - q[strategy]);
         q[strategy] = newQ;
 
         if (readFlagFile() == 0) // Indica que o arquivo não foi escrito ainda
@@ -373,7 +377,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     }
     if (wm.time().cycle() >= 5900 && wm.seeTime().cycle() <= 6000)
     {
-        writeQFile(strategy - 1, our_score);
+        writeQFile(strategy - 1, our_score - opp_score);
     }
 
     cout << "\n---------------------- executaacao() - Strategy: " << strategy << " ----------------------" << endl;

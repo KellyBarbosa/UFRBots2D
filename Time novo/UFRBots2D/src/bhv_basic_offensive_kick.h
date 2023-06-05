@@ -64,9 +64,6 @@ public:
     void writeQFile(int strategy, int gols);
     void writeFlagFile(int flagValue);
     int readFlagFile();
-    const double alpha = 0.125;
-    const double gamma = 0.9;
-    const double e = 0.5;
     const int q_size = 9;
     // FIM: UFRBots 2022/2023 - Kelly
 };
