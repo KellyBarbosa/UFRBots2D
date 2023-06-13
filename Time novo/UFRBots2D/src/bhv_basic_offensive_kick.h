@@ -64,7 +64,7 @@ public:
     void writeQFile(int strategy, int gols);
     void writeFlagFile(int flagValue);
     int readFlagFile();
-    const int q_size = 9;
+    const int q_size = 10;
     // FIM: UFRBots 2022/2023 - Kelly
 };
 
