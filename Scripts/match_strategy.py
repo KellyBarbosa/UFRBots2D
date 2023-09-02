@@ -25,15 +25,16 @@ def command(cmd, type=2):
 def startMatch():
     global RESULT_COMAND_SERVER
 
-    # Percorre diretórios para a pasta de Log e executa o monitor com reconexão automática
-    input_ = "cd ~ && cd " + DIR_LOG + " && rcssmonitor --auto-reconnect-mode on"
-    
-    # Prepara e inicia thread de execução do monitor
-    t0 = threading.Thread(target=command, args=(input_, 1))
-    t0.start()
+    if(MONITOR != 1):
+        # Percorre diretórios para a pasta de Log e executa o monitor com reconexão automática
+        input_ = "cd ~ && cd " + DIR_LOG + " && rcssmonitor --auto-reconnect-mode on"
+        
+        # Prepara e inicia thread de execução do monitor
+        t0 = threading.Thread(target=command, args=(input_, 1))
+        t0.start()
 
-    #Aguarda para evitar sobreposição dos processos.
-    sleep(3)
+        #Aguarda para evitar sobreposição dos processos.
+        sleep(3)
 
     # Início da execução da estratégia
     inicio = time.time()
@@ -160,6 +161,9 @@ def main():
     # GAME_MODE: 1 - normal | 2 - rápido
     global GAME_MODE
 
+    # Indica se deve abrir o monitor ou não.
+    global MONITOR
+
     # Indica se deve repetir o script.
     repeat = 1
 
@@ -177,6 +181,24 @@ def main():
     print("Obs.: Procurar pelo comentário (ctrl+f): REDIGITAR VALORES")
     print("====================================================================================================")
     print("====================================================================================================")
+
+    # Indica se o rcssmonitor deve ser aberto ou não.
+    # Caso queira que a pergunta não apareça mais, altere seu valor inicial para 1 ou para None.
+    # None indica que por padrão abrirá o monitor.
+    # 1 indica que por padrão NÃO abrirá o monitor.
+    # Qualquer outro valor indica que a pergunta será realizada.
+    MONITOR = 0
+
+    # Verifica se deve ou não perguntar sobre o rcssmonitor.
+    if(MONITOR != 1 and MONITOR != None):
+        print("\nO Parâmetro a seguir indica se você deseja que o rcssmonitor NÃO seja aberto. " +
+            "Por padrão ele sempre abrirá.")
+        MONITOR = input("Desativar rcssmonitor? (1- Sim | Default: Não.) ")
+
+        if(not MONITOR.isnumeric()):
+           MONITOR = 0
+        else:
+            MONITOR = int(MONITOR)
 
     DIR_LOG = None #"Documentos/Scripts/Logs"
     while True:
@@ -196,7 +218,7 @@ def main():
         # -------------------------------------------------------------------------------------------------------
         # Abaixo estão alguns exemplos em como os valores devem ser adicionados nas variáveis.
         # Obs.: Lembrar que são EXEMPLOS. O diretório depende do seu computador.
-        PARTIDAS = None
+        PARTIDAS = None #100
         DIR_OUR_TIME = None #"Documentos/UFRBots/UFRBots2D/Time_novo/UFRBots2D/src"
         DIR_OPP_TIME = None #"Documentos/UFRBots/adversarios/UFRBots2D/Binarios_de_outros_times/RoboCup_2022/HELIOS_SS2D_RC2022_D4_BIN/helios2022/bin"
         # GAME_MODE: 1 - normal | 2 - rápido
@@ -225,7 +247,13 @@ def main():
         startMatch()
         print("\n\n\n\n******************** All matches have been played ********************")
 
-        repeat = int(input("Deseja executar o script novamente? (1- Sim): "))
+        repeat = input("Deseja executar o script novamente? (1- Sim): ")
+
+        if(not repeat.isnumeric()):
+            repeat = 0
+        else:
+            repeat = int(repeat)
+
         if(repeat != 1):
             break
 
