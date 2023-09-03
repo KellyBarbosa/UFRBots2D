@@ -203,7 +203,9 @@ def main():
     DIR_LOG = None #"Documentos/Scripts/Logs"
     while True:
         if(DIR_LOG == None or DIR_LOG == ""):
-            DIR_LOG = input("\nDigite o diretório da pasta para salvar os Logs e csv. \nPs.: Coloque diretório completo (SEM Home): ")
+            DIR_LOG = input("\nDigite o diretório da pasta para salvar os Logs e csv. \nPs.: Coloque diretório completo (SEM Home). \n" + 
+                            "IMPORTANTE: NÃO coloque diretórios com caracteres especiais ou espaço no Nome das Pastas.\n" +
+                            "IMPORTANTE: Caso não o algoritmo exiba 'can't sudo to', execute o comando sudo chmod -R 777 nome_da_pasta.\n")
         else:
             break
 
@@ -223,7 +225,7 @@ def main():
         DIR_OPP_TIME = None #"Documentos/UFRBots/adversarios/UFRBots2D/Binarios_de_outros_times/RoboCup_2022/HELIOS_SS2D_RC2022_D4_BIN/helios2022/bin"
         # GAME_MODE: 1 - normal | 2 - rápido
         GAME_MODE = None #2
-        # IMPORTANTE: A variável de logo está um pouco mais acima, antes do seu while.
+        # IMPORTANTE: A variável de log e monitor estão um pouco mais acima, antes do seu while.
         # =================================================================================================================================================
         # =================================================================================================================================================
         # =================================================================================================================================================
@@ -233,10 +235,14 @@ def main():
                 PARTIDAS = int(input("\nDigite o número de partidas a serem jogadas: "))
 
             if(DIR_OUR_TIME == None):
-                DIR_OUR_TIME = input("\nDigite o diretório do time da UFRBots. Ps.: Pasta que contém o start.sh: ")
+                DIR_OUR_TIME = input("\nDigite o diretório do time da UFRBots. Ps.: Pasta que contém o start.sh. \n" + 
+                            "IMPORTANTE: NÃO coloque diretórios com caracteres especiais ou espaço no Nome das Pastas.\n" +
+                            "IMPORTANTE: Caso não o algoritmo exiba 'can't sudo to', execute o comando sudo chmod -R 777 nome_da_pasta.\n")
 
             if(DIR_OPP_TIME == None):
-                DIR_OPP_TIME = input("\nDigite o diretório do time ADVERSÁRIO. Ps.: Pasta que contém o start.sh: ")
+                DIR_OPP_TIME = input("\nDigite o diretório do time ADVERSÁRIO. Ps.: Pasta que contém o start.sh. \n" + 
+                            "IMPORTANTE: NÃO coloque diretórios com caracteres especiais ou espaço no Nome das Pastas.\n" +
+                            "IMPORTANTE: Caso não o algoritmo exiba 'can't sudo to', execute o comando sudo chmod -R 777 nome_da_pasta.\n")
             
             if(1 != GAME_MODE != 2):
                 GAME_MODE = int(input("\nDigite o modo de jogo (1 - normal | 2 - rápido): "))
