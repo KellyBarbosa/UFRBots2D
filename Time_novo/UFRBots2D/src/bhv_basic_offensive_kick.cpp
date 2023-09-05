@@ -81,7 +81,9 @@ using namespace rcsc;
 
 void Bhv_BasicOffensiveKick::selectStrategy()
 {
-    const double e_alea = (float)rand() / RAND_MAX;
+    // Função que seleciona a estratégia
+    const double e_alea = (float)rand() / RAND_MAX; // Gera valor aleatório para decidir se vai selecionar a melhor estratégia ou uma estratégia aleatória
+
     int selectedStrategy;
     if (e_alea <= e_greedy)
     { // ação/estratégia aleatória
@@ -107,6 +109,7 @@ void Bhv_BasicOffensiveKick::selectStrategy()
 
             float max = q[0];
             int position = 0;
+            // For que busca a posição da matriz que tem o maior valor de recompensa.
             for (int i = 0; i < q_size; i++)
             {
                 if (q[i] > max)
@@ -127,6 +130,7 @@ void Bhv_BasicOffensiveKick::selectStrategy()
 
 void Bhv_BasicOffensiveKick::saveStrategy(int strategy)
 {
+    // Salva a estratégia selecionada no arquivo.
     FILE *file;
     file = fopen("arquivos/strategy.txt", "w");
     fprintf(file, "%d", strategy);
@@ -135,6 +139,7 @@ void Bhv_BasicOffensiveKick::saveStrategy(int strategy)
 
 int Bhv_BasicOffensiveKick::readStrategy()
 {
+    // Lê o arquivo que indica a estratégia selecionada
     FILE *file;
     file = fopen("arquivos/strategy.txt", "r");
 
@@ -154,6 +159,7 @@ int Bhv_BasicOffensiveKick::readStrategy()
 
 void Bhv_BasicOffensiveKick::writeFlagFile(int flagValue)
 {
+    // Esta função Impede o arquivo q.txt de ser aberto e escrito novamente na mesma partida.
     FILE *fileController;
     fileController = fopen("arquivos/q_controller.txt", "w");
 
@@ -170,6 +176,7 @@ void Bhv_BasicOffensiveKick::writeFlagFile(int flagValue)
 
 int Bhv_BasicOffensiveKick::readFlagFile()
 {
+    // Função que verifica se o q_controller.txt ja foi aberto na partida.
     FILE *fileController;
 
     fileController = fopen("arquivos/q_controller.txt", "r");
@@ -193,6 +200,7 @@ int Bhv_BasicOffensiveKick::readFlagFile()
 
 void Bhv_BasicOffensiveKick::writeQFile(int strategy, int goal_balance)
 {
+    // A função calcula o valor da recompensa da estratégia selecionada e salva no arquivo q.txt
     cout << "\n---------------------- writeQFile: " << strategy << " | " << goal_balance << " ----------------------" << endl;
     FILE *file;
     file = fopen("arquivos/q.txt", "r");
@@ -219,6 +227,7 @@ void Bhv_BasicOffensiveKick::writeQFile(int strategy, int goal_balance)
             }
         }
 
+        // Calcula a recompensa
         float newQ = q[strategy] + alpha * (goal_balance + gamma * max - q[strategy]);
         q[strategy] = newQ;
 
@@ -258,7 +267,7 @@ bool Bhv_BasicOffensiveKick::execute(PlayerAgent *agent)
 
 int Bhv_BasicOffensiveKick::recebeestado(PlayerAgent *agent)
 {
-
+    // A função Identifica a posição do jogador no campo.
     const WorldModel &wm = agent->world();
 
     const PlayerPtrCont &opps = wm.opponentsFromSelf();
@@ -365,6 +374,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
                          ? wm.gameMode().scoreRight()
                          : wm.gameMode().scoreLeft());
 
+    // Este bloco de if Seleciona a estratégia do Time inteiro. (Talvez deva ficar no main_coach/main_trainer/main_player)
     if (wm.time().cycle() >= 0 && wm.seeTime().cycle() <= 100)
     {
         strategy = 1;
@@ -379,11 +389,13 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     {
         writeQFile(strategy - 1, our_score - opp_score);
     }
+    // Fim do bloco
 
     cout << "\n---------------------- executaacao() - Strategy: " << strategy << " ----------------------" << endl;
 
     //  FIM: UFRBots 2022/2023 - Kelly
 
+    // Este bloco está relacionado com a ação a ser executada. Não sabemos exatamente o que faz.
     Vector2D ball = wm.ball().pos();
     Vector2D me = wm.self().pos();
 
@@ -487,10 +499,12 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     if (ball.x > 40.0)
         drib_target = me + Vector2D::polar2vector(20.0, (goal - me).dir());
 
+    // Fim do bloco
     /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //---------Zonas de Defesa-----------------------------///
 
+    // Este Bloco APARENTEMENTE não está sendo usado. Não sabemos o que faz.
     // if (( nearest_opp_dist > 4 )&&(wm.self().pos().x <= 0)) acao_q = 2;
     // Zona A
     if (wm.self().pos().x <= -36.0)
@@ -530,8 +544,11 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
             }
         }
     }
+    // Fim do Bloco.
 
     // INÍCIO: UFRBots 2022/2023 - Kelly
+    
+    // Matriz de Estratégias.
     int actions[40][q_size] = {
         {2, 2, 1, 5, 3, 3, 5, 3, 3, 5}, // 1
         {2, 2, 1, 5, 3, 4, 5, 4, 3, 5}, // 2
@@ -575,6 +592,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
         {1, 2, 1, 1, 3, 4, 4, 2, 5, 5}, // 40
     };
 
+    // Seleciona a ação
     switch (estado)
     {
     case 1:
@@ -700,6 +718,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     }
     // FIM: UFRBots 2022/2023 - Kelly
 
+    // Não conseguimos identificar este bloco
     const AngleDeg drib_angle = (drib_target - wm.self().pos()).th();
 
     const int max_dash_step = wm.self().playerType().cyclesToReachDistance(wm.self().pos().dist(drib_target));
@@ -725,6 +744,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
     const AngleDeg kick_angle = kick_accel.th() - wm.self().body();
 
     // agent->debugClient().setTarget( target );
+    // Fim do bloco
 
     int acao = 0;
     acao = acao_q;
@@ -755,6 +775,8 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
 
     // Executa a a��o selecionada
 
+    // Seleciona a ação a ser executada.
+    // TALVEZ cada ação deve ficar em um arquivo bhv separado.
     switch (acao)
     {
 
@@ -1052,6 +1074,7 @@ int Bhv_BasicOffensiveKick::executaacao(PlayerAgent *agent, int acao_q, int esta
 // Retorna a Recompensa de Acordo com Par Estado/A��o
 int *Bhv_BasicOffensiveKick::recompensa(PlayerAgent *agent, int acao_q)
 {
+    // Não usamos essa função
 
     int R_M[24][6] = {{-1, 0, -1, -1, -1, -1},
                       {-1, -1, 0, -1, -1, -1},
